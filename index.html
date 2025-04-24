@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kleurrijke Site</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Arial', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #ffcccc, #f08080, #e57373);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      color: #333;
+    }
+
+    .container {
+      overflow: auto;
+      max-height: 90vh;
+      padding: 2rem;
+      box-sizing: border-box;
+    }
+
+    .content {
+      background: rgba(255, 255, 255, 0.55);
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      max-width: 800px;
+      margin: auto;
+    }
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      color: #a30000;
+      font-family: Georgia, 'Times New Roman', Times, serif;
+    }
+
+    p, pre {
+      font-size: 1.1rem;
+      text-align: left;
+      white-space: pre-wrap;
+      line-height: 1.5;
+    }
+
+    .rules-box {
+      background: rgba(255, 255, 255, 0.75);
+      padding: 1.5rem;
+      border-radius: 15px;
+      margin-top: 2rem;
+      max-height: 60vh;
+      overflow-y: auto;
+    }
+
+    strong {
+      color: #a30000;
+    }
+
+    b {
+      color: #990000;
+    }
+
+    i {
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="content">
+      <h1>Rules/explanation</h1>
+
+      <div class="rules-box">
+        <p><strong>These are the rules and the explanations of the game</strong></p>
+        <pre>
+---
+<b>Game Rules: Emergency Response Challenge</b>
+
+<b>Objective:</b>  
+Collect the most red <i>Action Cards</i> by giving the best explanation for how to handle emergency scenarios.
+
+<b>Setup:</b>  
+- A slot machine (simulated)  
+- Three card decks:  
+  - <b>Red Action Cards</b> (emergency scenarios)  
+  - <b>Blue Obstacle Cards</b> (complications)  
+  - <b>Black Persona Cards</b> (personal conditions)  
+- A timer (phone, hourglass, etc.)
+
+<b>Gameplay:</b>
+
+1. <b>Spin the Slot Machine</b>  
+   - <b>3 different symbols:</b> Draw 1 card  
+   - <b>2 identical symbols:</b> Draw 2 cards  
+   - <b>3 identical symbols:</b> Draw 3 cards
+
+2. <b>Draw Cards in Order:</b>  
+   - <b>1st card (Red)</b> – Action Card (e.g., Heart Attack)  
+   - <b>2nd card (Blue)</b> – Obstacle Card (e.g., traffic jam)  
+   - <b>3rd card (Black)</b> – Persona Card (e.g., person has a pacemaker)
+
+3. <b>Discussion Phase:</b>  
+   - Players discuss the best way to handle the situation described by the cards.  
+   - Set a timer for the discussion (duration is up to you).
+
+4. <b>Judging:</b>  
+   - After time runs out, all players vote on who gave the best explanation.  
+   - The winner keeps the red Action Card.
+
+5. <b>End of Game:</b>  
+   - The game ends when all red Action Cards have been used.  
+   - The player with the most red cards wins!
+
+6. <b>Solutions:</b>  
+   - Scan the QR code to view possible solutions.  
+   - Look for the section labeled “Solutions” above the code.
+        </pre>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
