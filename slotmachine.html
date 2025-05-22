@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <title>Slotmachine</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            text-align: center;
+            background-color: #222;
+            color: white;
+            padding-top: 50px;
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .center-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .slot-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px;
+            font-size: 120px;
+        }
+
+        .slot {
+            margin: 0 30px;
+            padding: 40px;
+            background-color: #333;
+            border: 6px solid rgb(173, 25, 25);
+            border-radius: 20px;
+            width: 140px;
+            height: 140px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: none;
+        }
+
+        button {
+            padding: 20px 50px;
+            font-size: 28px;
+            background-color: rgb(173, 25, 25);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            margin-top: 30px;
+        }
+
+        #message {
+            font-size: 32px;
+            margin-top: 30px;
+            min-height: 40px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotateX(0); }
+            50% { transform: rotateX(180deg); }
+            100% { transform: rotateX(360deg); }
+        }
+
+        .spinning span {
+            animation: spin 0.6s ease-in-out;
+        }
+
+        /* Hamburger menu */
+        .hamburger {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 100;
+        }
+        .hamburger-bar {
+            width: 32px;
+            height: 4px;
+            background: #fff;
+            margin: 4px 0;
+            border-radius: 2px;
+            transition: 0.3s;
+        }
+        .menu-panel {
+            display: none;
+            position: absolute;
+            top: 70px;
+            right: 24px;
+            background: #333;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+            padding: 18px 28px;
+            min-width: 220px;
+            text-align: left;
+            z-index: 200;
+        }
+        .menu-panel.active {
+            display: block;
+        }
+        .menu-panel label {
+            color: #fff;
+            font-size: 1.08rem;
+            display: block;
+            margin-bottom: 10px;
+        }
+        .menu-panel input[type="checkbox"] {
+            margin-right: 8px;
+        }
+
+        /* GSM (mobile) styles */
+        body.gsm-mode {
+            background: #181818;
+        }
+        body.gsm-mode .center-wrapper {
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        body.gsm-mode .slot-container {
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            margin: 32px auto 0 auto;
+            font-size: 90px;
+            width: 100vw;
+            max-width: 100vw;
+            height: auto;
+            overflow: visible;
+            gap: 0;
+            padding: 0;
+            background: #232323;
+        }
+        body.gsm-mode .slot {
+            width: 90px;
+            min-width: 90px;
+            max-width: 90px;
+            height: 90px;
+            margin: 0 10px;
+            padding: 10px;
+            font-size: 1.1em;
+            border-width: 4px;
+            border-radius: 16px;
+        }
+        body.gsm-mode h1 {
+            font-size: 2.2rem;
+            margin: 32px 0 0 0;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+        body.gsm-mode button {
+            width: 90vw;
+            max-width: 90vw;
+            font-size: 1.2rem;
+            padding: 18px 0;
+            margin: 32px auto 0 auto;
+            display: block;
+        }
+        body.gsm-mode #message {
+            font-size: 1.2rem;
+            margin-top: 18px;
+            text-align: center;
+        }
+        /* Hendel styling - mooier en aantrekkelijker */
+        .gsm-hendel {
+            display: none;
+        }
+        body.gsm-mode .gsm-hendel {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0 auto 24px auto;
+            user-select: none;
+            touch-action: none;
+            position: relative;
+            height: 140px;
+        }
+        body.gsm-mode .hendel-bar {
+            width: 18px;
+            height: 90px;
+            background: linear-gradient(180deg, #e0e0e0 0%, #aaa 100%);
+            border-radius: 12px;
+            margin-bottom: 0;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.13);
+        }
+        body.gsm-mode .hendel-knob {
+            width: 48px;
+            height: 48px;
+            background: radial-gradient(circle at 60% 40%, #ff5e62 60%, #d7263d 100%);
+            border-radius: 50%;
+            border: 4px solid #fff;
+            margin-top: -24px;
+            box-shadow: 0 4px 18px 2px rgba(215,38,61,0.18), 0 1px 4px #0002;
+            position: relative;
+            z-index: 2;
+            transition: background 0.2s, box-shadow 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        body.gsm-mode .hendel-knob::after {
+            content: "";
+            display: block;
+            width: 18px;
+            height: 18px;
+            background: #fff8;
+            border-radius: 50%;
+            position: absolute;
+            top: 10px;
+            left: 12px;
+            pointer-events: none;
+            filter: blur(1px);
+        }
+        body.gsm-mode .hendel-knob.active {
+            background: radial-gradient(circle at 60% 40%, #d7263d 60%, #a81c2a 100%);
+            box-shadow: 0 2px 8px 2px #a81c2a55, 0 1px 4px #0002;
+        }
+        body.gsm-mode .hendel-label {
+            color: #ff5e62;
+            font-size: 1.08rem;
+            margin-top: 12px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-shadow: 0 2px 8px #0006;
+            animation: hendel-label-bounce 1.5s infinite;
+        }
+        @keyframes hendel-label-bounce {
+            0%, 100% { transform: translateY(0);}
+            50% { transform: translateY(8px);}
+        }
+        @media (max-width: 600px) {
+            .slot-container {
+                font-size: 90px;
+            }
+            .slot {
+                width: 90px;
+                min-width: 90px;
+                max-width: 90px;
+                height: 90px;
+                margin: 0 10px;
+                padding: 10px;
+            }
+            .center-wrapper {
+                align-items: center;
+            }
+            h1 {
+                font-size: 2.2rem;
+                margin-top: 32px;
+            }
+            button {
+                width: 90vw;
+                max-width: 90vw;
+                font-size: 1.2rem;
+                padding: 18px 0;
+            }
+            #message {
+                font-size: 1.2rem;
+                margin-top: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hamburger" onclick="toggleMenu()" title="Menu">
+        <div class="hamburger-bar"></div>
+        <div class="hamburger-bar"></div>
+        <div class="hamburger-bar"></div>
+    </div>
+    <div class="menu-panel" id="menu-panel">
+        <label>
+            <input type="checkbox" id="gsm-toggle" onchange="toggleGsmMode(this.checked)">
+            GSM-vriendelijke modus (hendel)
+        </label>
+        <small style="color:#aaa;">Activeer voor mobiel gebruik.<br>Trek aan de hendel om te draaien.</small>
+    </div>
+    <div class="center-wrapper">
+        <h1>🎰 Slotmachine 🎰</h1>
+        <div class="slot-container" id="slot-container">
+            <div class="slot" id="slot1"><span>❓</span></div>
+            <div class="slot" id="slot2"><span>❓</span></div>
+            <div class="slot" id="slot3"><span>❓</span></div>
+        </div>
+        <div class="gsm-hendel" id="gsm-hendel">
+            <div class="hendel-bar"></div>
+            <div class="hendel-knob" id="hendel-knob"></div>
+            <div class="hendel-label">Trek aan de hendel</div>
+        </div>
+        <button id="draai-btn" onclick="draaiSlotmachine()">Draaien</button>
+        <div id="message"></div>
+    </div>
+    <script>
+        const symbolen = ["🚑", "🫀", "💉"];
+
+        function willekeurigSymbool() {
+            return symbolen[Math.floor(Math.random() * symbolen.length)];
+        }
+
+        function draaiSlotmachine() {
+            const slots = [
+                document.getElementById("slot1"),
+                document.getElementById("slot2"),
+                document.getElementById("slot3")
+            ];
+
+            // Add spinning animation
+            slots.forEach(slot => {
+                slot.classList.add("spinning");
+            });
+
+            setTimeout(() => {
+                // Remove spinning animation and update symbols
+                slots.forEach(slot => {
+                    slot.classList.remove("spinning");
+                    const symbol = willekeurigSymbool();
+                    slot.querySelector("span").textContent = symbol;
+                });
+
+                const slot1 = slots[0].querySelector("span").textContent;
+                const slot2 = slots[1].querySelector("span").textContent;
+                const slot3 = slots[2].querySelector("span").textContent;
+
+                const message = document.getElementById("message");
+
+                if (slot1 === slot2 && slot2 === slot3) {
+                    message.textContent = "🎉 Take 3 cards!";
+                } else if (slot1 === slot2 || slot2 === slot3 || slot1 === slot3) {
+                    message.textContent = "😊 Take 2 cards";
+                } else {
+                    message.textContent = "😢 Take 1 card.";
+                }
+            }, 600);
+        }
+
+        // Hamburger menu logic
+        function toggleMenu() {
+            document.getElementById('menu-panel').classList.toggle('active');
+        }
+        // GSM mode logic
+        function toggleGsmMode(enabled) {
+            const hendel = document.getElementById('gsm-hendel');
+            const btn = document.getElementById('draai-btn');
+            if (enabled) {
+                document.body.classList.add('gsm-mode');
+                hendel.style.display = "flex";
+                btn.style.display = "none";
+                enableHendel();
+            } else {
+                document.body.classList.remove('gsm-mode');
+                hendel.style.display = "none";
+                btn.style.display = "block";
+                disableHendel();
+            }
+        }
+        // Hendel logic
+        let hendelStartY = null;
+        let hendelMoved = false;
+        function enableHendel() {
+            const knob = document.getElementById('hendel-knob');
+            knob.addEventListener('touchstart', hendelTouchStart, {passive: false});
+            knob.addEventListener('touchmove', hendelTouchMove, {passive: false});
+            knob.addEventListener('touchend', hendelTouchEnd, {passive: false});
+            knob.addEventListener('mousedown', hendelMouseStart);
+        }
+        function disableHendel() {
+            const knob = document.getElementById('hendel-knob');
+            knob.removeEventListener('touchstart', hendelTouchStart);
+            knob.removeEventListener('touchmove', hendelTouchMove);
+            knob.removeEventListener('touchend', hendelTouchEnd);
+            knob.removeEventListener('mousedown', hendelMouseStart);
+        }
+        function hendelTouchStart(e) {
+            hendelStartY = e.touches[0].clientY;
+            hendelMoved = false;
+            document.getElementById('hendel-knob').classList.add('active');
+        }
+        function hendelTouchMove(e) {
+            if (hendelStartY === null) return;
+            const deltaY = e.touches[0].clientY - hendelStartY;
+            if (deltaY > 60) {
+                hendelMoved = true;
+            }
+        }
+        function hendelTouchEnd(e) {
+            document.getElementById('hendel-knob').classList.remove('active');
+            if (hendelMoved) {
+                draaiSlotmachine();
+            }
+            hendelStartY = null;
+            hendelMoved = false;
+        }
+        // Mouse support for hendel (desktop)
+        function hendelMouseStart(e) {
+            hendelStartY = e.clientY;
+            hendelMoved = false;
+            document.addEventListener('mousemove', hendelMouseMove);
+            document.addEventListener('mouseup', hendelMouseEnd);
+            document.getElementById('hendel-knob').classList.add('active');
+        }
+        function hendelMouseMove(e) {
+            if (hendelStartY === null) return;
+            const deltaY = e.clientY - hendelStartY;
+            if (deltaY > 60) {
+                hendelMoved = true;
+            }
+        }
+        function hendelMouseEnd(e) {
+            document.getElementById('hendel-knob').classList.remove('active');
+            if (hendelMoved) {
+                draaiSlotmachine();
+            }
+            hendelStartY = null;
+            hendelMoved = false;
+            document.removeEventListener('mousemove', hendelMouseMove);
+            document.removeEventListener('mouseup', hendelMouseEnd);
+        }
+        // Close menu when clicking outside
+        document.addEventListener('click', function(e) {
+            const menu = document.getElementById('menu-panel');
+            const hamburger = document.querySelector('.hamburger');
+            if (!menu.contains(e.target) && !hamburger.contains(e.target)) {
+                menu.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>
